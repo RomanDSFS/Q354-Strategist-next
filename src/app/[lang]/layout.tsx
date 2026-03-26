@@ -11,15 +11,16 @@ export default async function LangLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: string }>; // ← меняем на string
 }) {
   const { lang } = await params;
+  const typedLang = lang as Lang; // ← приводим к Lang
 
   return (
-    <html lang={lang}>
+    <html lang={typedLang}>
       <body className="min-h-screen bg-[#01062d] text-gray-200">
         <div className="flex flex-col min-h-screen">
-          <Header lang={lang} />
+          <Header lang={typedLang} />
           <main className="grow">{children}</main>
         </div>
       </body>

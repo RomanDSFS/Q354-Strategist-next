@@ -1,5 +1,5 @@
 // src/components/ui/LanguageToggle.tsx
-import { useLanguage } from '../../i18n/LanguageContext';
+import { useLanguage } from '@/i18n/LanguageContext';
 
 export const LanguageToggle = () => {
   const { lang, toggleLanguage } = useLanguage();

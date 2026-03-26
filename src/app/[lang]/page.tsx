@@ -11,21 +11,18 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 
-// ============================================================================
-// SECTION 1: Генерация метаданных // Metadata Generation
-// ============================================================================
-
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: string }>;
 }): Promise<Metadata> {
   const { lang } = await params;
-  const tr = t(lang);
+  const typedLang = lang as Lang;
+  const tr = t(typedLang);
 
   const base = process.env.NEXT_PUBLIC_SITE_URL || "https://example.com";
-  const url = `${base}/${lang}`;
-  const ogImage = lang === "ru" ? "/og-ru.png" : "/og-en.png";
+  const url = `${base}/${typedLang}`;
+  const ogImage = typedLang === "ru" ? "/og-ru.png" : "/og-en.png";
 
   return {
     title: tr.homeTitle,
@@ -40,7 +37,7 @@ export async function generateMetadata({
       url,
       siteName: tr.siteName,
       images: [{ url: `${base}${ogImage}`, width: 1200, height: 630 }],
-      locale: lang === "ru" ? "ru_RU" : "en_US",
+      locale: typedLang === "ru" ? "ru_RU" : "en_US",
       type: "website",
     },
     twitter: {
@@ -52,17 +49,14 @@ export async function generateMetadata({
   };
 }
 
-// ============================================================================
-// SECTION 2: Основной компонент страницы // Main Page Component
-// ============================================================================
-
 export default async function HomePage({
   params,
 }: {
-  params: Promise<{ lang: Lang }>;
+  params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const tr = t(lang);
+  const typedLang = lang as Lang;
+  const tr = t(typedLang);
 
   // --------------------------------------------------------------------------
   // 2.1: Константы и проектные токены // Constants & Design Tokens
@@ -80,6 +74,7 @@ export default async function HomePage({
   const cardPad = "p-5 sm:p-6";
   const cardHover = "transition hover:border-amber-500/30 hover:shadow-[0_0_32px_rgba(245,158,11,0.08)]";
   const imageCardBase = "rounded-2xl";
+  
   // --------------------------------------------------------------------------
   // 2.2: Фоновые слои (визуальная глубина) // Background Layers (Visual Depth)
   // --------------------------------------------------------------------------
@@ -153,8 +148,6 @@ export default async function HomePage({
   const VisualLibrary = () => (
     <aside className="order-2 lg:order-1">
       <div className="lg:sticky lg:top-10">
-         
-
         {/* Мобильная версия: горизонтальный скролл // Mobile: horizontal scroll */}
         <div className="flex gap-4 overflow-x-auto pb-2 lg:hidden">
           {images.filter((_, i) => i === 0 || i === 1).map((img, i) => (
@@ -207,8 +200,6 @@ export default async function HomePage({
 
   const HeroSection = () => (
     <header className="mb-10 sm:mb-12">
-       
-
       <h1 className="mt-5 text-4xl sm:text-5xl font-semibold tracking-tight text-gray-100">
         {tr.homeH1}
       </h1>
@@ -216,8 +207,6 @@ export default async function HomePage({
       <p className="mt-4 max-w-[65ch] text-[17px] sm:text-lg leading-7 text-gray-200/85">
         {tr.homeDesc}
       </p>
-
-       
 
       <div className="mt-7 flex flex-wrap gap-6">
         {[
@@ -276,7 +265,7 @@ export default async function HomePage({
 
   const ContentText = () => (
     <div className="max-w-[70ch] space-y-6 text-[17px] leading-7 text-gray-200/85">
-      {tr.homeLead.map((p, idx) => (
+      {tr.homeLead.map((p: string, idx: number) => (
         <p key={idx}>{p}</p>
       ))}
       <p>
@@ -386,7 +375,7 @@ export default async function HomePage({
           </p>
         </div>
         <a
-          href={`/${lang}/contacts`}
+          href={`/${typedLang}/contacts`}
           className="inline-flex items-center justify-center rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-gray-100 px-6 py-3 font-medium hover:bg-white/20 transition-all shadow-lg"
         >
           {tr.footerCta}
